@@ -98,7 +98,6 @@ public class FaceActivity extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mTextView = findViewById(R.id.faceTextView);
         glSurfaceView = findViewById(R.id.faceSurfaceview);
-
         mDisplayRotationManager = new DisplayRotationManager(this);
 
         glSurfaceView.setPreserveEGLContextOnPause(true);
@@ -113,7 +112,6 @@ public class FaceActivity extends Activity {
         mFaceRenderManager = new FaceRenderManager(this, this);
         mFaceRenderManager.setDisplayRotationManage(mDisplayRotationManager);
         mFaceRenderManager.setTextView(mTextView);
-
         glSurfaceView.setRenderer(mFaceRenderManager);
         glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
     }

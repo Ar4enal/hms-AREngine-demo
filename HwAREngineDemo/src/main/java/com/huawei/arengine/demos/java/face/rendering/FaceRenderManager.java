@@ -21,6 +21,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.huawei.arengine.demos.common.ArDemoRuntimeException;
@@ -30,11 +31,22 @@ import com.huawei.arengine.demos.common.TextDisplay;
 import com.huawei.arengine.demos.common.TextureDisplay;
 import com.huawei.hiar.ARCamera;
 import com.huawei.hiar.ARFace;
+import com.huawei.hiar.ARFaceBlendShapes;
 import com.huawei.hiar.ARFrame;
 import com.huawei.hiar.ARPose;
 import com.huawei.hiar.ARSession;
+import com.huawei.hiar.ARTrackable;
 import com.huawei.hiar.ARTrackable.TrackingState;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -67,6 +79,9 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
 
     private boolean isOpenCameraOutside = true;
 
+    private static final String ServerIp = "192.168.0.104";
+    private static final int ServerPort = 8001;
+
     /**
      * Initialize the texture ID.
      */
@@ -79,12 +94,13 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
     private TextDisplay mTextDisplay = new TextDisplay();
 
     private DisplayRotationManager mDisplayRotationManager;
+    Thread publishThread;
 
     /**
      * The constructor initializes context and activity.
      * This method will be called when {@link Activity#onCreate}.
      *
-     * @param context Context
+     * @param context  Context
      * @param activity Activity
      */
     public FaceRenderManager(Context context, Activity activity) {
@@ -178,7 +194,7 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
     /**
      * Create a thread for text display on the UI. The method for displaying texts is called back in TextureDisplay.
      *
-     * @param text Information displayed on the screen.
+     * @param text      Information displayed on the screen.
      * @param positionX X coordinate of a point.
      * @param positionY Y coordinate of a point.
      */
@@ -237,6 +253,10 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
                     updateMessageData(sb, fpsResult, face);
                     mTextDisplay.onDrawFrame(sb);
                 }
+                ARFaceBlendShapes blendShapes = face.getFaceBlendShapes();
+                byte[] data = new JSONObject(blendShapes.getBlendShapeDataMapKeyString()).toString().getBytes();
+                //byte[] data = "test".getBytes(StandardCharsets.UTF_8);
+                send_UDP(data);
             }
         } catch (ArDemoRuntimeException e) {
             LogUtil.error(TAG, "Exception on the ArDemoRuntimeException!");
@@ -263,6 +283,7 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
 
         float[] textureCoordinates = face.getFaceGeometry().getTextureCoordinates().array();
         sb.append("textureCoordinates length:[ ").append(textureCoordinates.length).append(" ]");
+        sb.append("left eye blink:[").append(face.getFaceBlendShapes().getBlendShapeDataMapKeyString().get("Animoji_Eye_Blink_Left")).append(" ]");
     }
 
     private float doFpsCalculate() {
@@ -276,5 +297,32 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
             lastInterval = timeNow;
         }
         return fps;
+    }
+
+/*    public void send_UDP(final byte[] data){
+        publishThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    DatagramPacket packet = new DatagramPacket(data, data.length, InetAddress.getByName(ServerIp), ServerPort);
+                    DatagramSocket socket = new DatagramSocket();
+                    socket.send(packet);
+                    Log.d("send", String.valueOf(data));
+                    socket.close();
+                } catch (Exception e) {
+                    Log.d("", "Connection broken: " + e.getClass().getName());
+                }
+
+            }
+        });
+        publishThread.start();
+    }*/
+
+
+    public void send_UDP(byte[] data) throws IOException {
+            DatagramPacket packet = new DatagramPacket(data, data.length, InetAddress.getByName(ServerIp), ServerPort);
+            DatagramSocket socket = new DatagramSocket();
+            socket.send(packet);
+            Log.d("send", String.valueOf(data));
     }
 }
