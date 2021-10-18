@@ -94,7 +94,6 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
     private TextDisplay mTextDisplay = new TextDisplay();
 
     private DisplayRotationManager mDisplayRotationManager;
-    Thread publishThread;
 
     /**
      * The constructor initializes context and activity.
@@ -254,8 +253,13 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
                     mTextDisplay.onDrawFrame(sb);
                 }
                 ARFaceBlendShapes blendShapes = face.getFaceBlendShapes();
-                byte[] data = new JSONObject(blendShapes.getBlendShapeDataMapKeyString()).toString().getBytes();
-                //byte[] data = "test".getBytes(StandardCharsets.UTF_8);
+                JSONObject faceBlendShapes = new JSONObject(blendShapes.getBlendShapeDataMapKeyString());
+                faceBlendShapes.put("qx", face.getPose().qx());
+                faceBlendShapes.put("qy", face.getPose().qy());
+                faceBlendShapes.put("qz", face.getPose().qz());
+                faceBlendShapes.put("qw", face.getPose().qw());
+                byte[] data = faceBlendShapes.toString().getBytes();
+                //byte[] data = new JSONObject(blendShapes.getBlendShapeDataMapKeyString()).toString().getBytes();
                 send_UDP(data);
             }
         } catch (ArDemoRuntimeException e) {
@@ -283,7 +287,7 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
 
         float[] textureCoordinates = face.getFaceGeometry().getTextureCoordinates().array();
         sb.append("textureCoordinates length:[ ").append(textureCoordinates.length).append(" ]");
-        sb.append("left eye blink:[").append(face.getFaceBlendShapes().getBlendShapeDataMapKeyString().get("Animoji_Eye_Blink_Left")).append(" ]");
+        //sb.append("left eye blink:[").append(face.getFaceBlendShapes().getBlendShapeDataMapKeyString().get("Animoji_Eye_Blink_Left")).append(" ]");
     }
 
     private float doFpsCalculate() {
