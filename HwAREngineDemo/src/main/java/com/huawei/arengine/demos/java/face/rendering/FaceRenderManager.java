@@ -24,6 +24,7 @@ import android.opengl.GLSurfaceView;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.google.mediapipe.formats.proto.LandmarkProto;
 import com.huawei.arengine.demos.common.ArDemoRuntimeException;
 import com.huawei.arengine.demos.common.DisplayRotationManager;
 import com.huawei.arengine.demos.common.LogUtil;
@@ -38,6 +39,7 @@ import com.huawei.hiar.ARSession;
 import com.huawei.hiar.ARTrackable;
 import com.huawei.hiar.ARTrackable.TrackingState;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -47,7 +49,9 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -303,30 +307,10 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
         return fps;
     }
 
-/*    public void send_UDP(final byte[] data){
-        publishThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    DatagramPacket packet = new DatagramPacket(data, data.length, InetAddress.getByName(ServerIp), ServerPort);
-                    DatagramSocket socket = new DatagramSocket();
-                    socket.send(packet);
-                    Log.d("send", String.valueOf(data));
-                    socket.close();
-                } catch (Exception e) {
-                    Log.d("", "Connection broken: " + e.getClass().getName());
-                }
-
-            }
-        });
-        publishThread.start();
-    }*/
-
-
     public void send_UDP(byte[] data) throws IOException {
             DatagramPacket packet = new DatagramPacket(data, data.length, InetAddress.getByName(ServerIp), ServerPort);
             DatagramSocket socket = new DatagramSocket();
             socket.send(packet);
-            Log.d("send", String.valueOf(data));
+            Log.d("send--face", String.valueOf(data));
     }
 }
