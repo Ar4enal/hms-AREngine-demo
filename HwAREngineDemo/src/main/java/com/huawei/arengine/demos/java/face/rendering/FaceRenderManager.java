@@ -30,6 +30,7 @@ import com.huawei.arengine.demos.common.DisplayRotationManager;
 import com.huawei.arengine.demos.common.LogUtil;
 import com.huawei.arengine.demos.common.TextDisplay;
 import com.huawei.arengine.demos.common.TextureDisplay;
+import com.huawei.arengine.demos.java.face.AudioRecordUtil;
 import com.huawei.hiar.ARCamera;
 import com.huawei.hiar.ARFace;
 import com.huawei.hiar.ARFaceBlendShapes;
@@ -83,7 +84,7 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
 
     private boolean isOpenCameraOutside = true;
 
-    private static final String ServerIp = "192.168.0.104";
+    private static final String ServerIp = "192.168.66.113";
     private static final int ServerPort = 8001;
 
     /**
@@ -262,9 +263,7 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
                 faceBlendShapes.put("qy", face.getPose().qy());
                 faceBlendShapes.put("qz", face.getPose().qz());
                 faceBlendShapes.put("qw", face.getPose().qw());
-                byte[] data = faceBlendShapes.toString().getBytes();
-                //byte[] data = new JSONObject(blendShapes.getBlendShapeDataMapKeyString()).toString().getBytes();
-                send_UDP(data);
+                send_UDP(faceBlendShapes);
             }
         } catch (ArDemoRuntimeException e) {
             LogUtil.error(TAG, "Exception on the ArDemoRuntimeException!");
@@ -307,10 +306,13 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
         return fps;
     }
 
-    public void send_UDP(byte[] data) throws IOException {
-            DatagramPacket packet = new DatagramPacket(data, data.length, InetAddress.getByName(ServerIp), ServerPort);
-            DatagramSocket socket = new DatagramSocket();
-            socket.send(packet);
-            Log.d("send--face", String.valueOf(data));
+    public void send_UDP(JSONObject data) throws IOException, JSONException {
+        JSONObject blendshapeData = new JSONObject();
+        blendshapeData.put("type", "blendshape");
+        blendshapeData.put("content", data);
+        DatagramPacket packet = new DatagramPacket(blendshapeData.toString().getBytes(), blendshapeData.toString().getBytes().length, InetAddress.getByName(ServerIp), ServerPort);
+        DatagramSocket socket = new DatagramSocket();
+        socket.send(packet);
+        Log.d("send--face", String.valueOf(blendshapeData));
     }
 }

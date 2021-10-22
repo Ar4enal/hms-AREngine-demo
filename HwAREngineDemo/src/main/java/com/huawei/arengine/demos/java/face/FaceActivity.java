@@ -73,7 +73,8 @@ import java.util.List;
  * @author HW
  * @since 2020-03-18
  */
-public class FaceActivity extends Activity implements SignalingClient.Callback{
+//public class FaceActivity extends Activity implements SignalingClient.Callback{
+public class FaceActivity extends Activity{
     private static final String TAG = FaceActivity.class.getSimpleName();
 
     private ARSession mArSession;
@@ -111,9 +112,9 @@ public class FaceActivity extends Activity implements SignalingClient.Callback{
     
     private static final String ServerIp = "192.168.0.104";
     private static final int ServerPort = 8001;
-    PeerConnectionFactory peerConnectionFactory;
+/*    PeerConnectionFactory peerConnectionFactory;
     PeerConnection peerConnection;
-    MediaStream mediaStream;
+    MediaStream mediaStream;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,8 +140,11 @@ public class FaceActivity extends Activity implements SignalingClient.Callback{
         glSurfaceView.setRenderer(mFaceRenderManager);
         glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
-        EglBase.Context eglBaseContext = EglBase.create().getEglBaseContext();
+        AudioRecordUtil.getInstance().start();
 
+
+
+/*        EglBase.Context eglBaseContext = EglBase.create().getEglBaseContext();
         // create PeerConnectionFactory
         PeerConnectionFactory.initialize(PeerConnectionFactory.InitializationOptions
                 .builder(this)
@@ -170,7 +174,7 @@ public class FaceActivity extends Activity implements SignalingClient.Callback{
         mediaStream.addTrack(audioTrack);
 
         SignalingClient.get().setCallback(this);
-        call();
+        call();*/
     }
 
     @Override
@@ -369,7 +373,7 @@ public class FaceActivity extends Activity implements SignalingClient.Callback{
         }
     }
 
-    private void call() {
+/*    private void call() {
         List<PeerConnection.IceServer> iceServers = new ArrayList<>();
         iceServers.add(PeerConnection.IceServer.builder("stun:stun.l.google.com:19302").createIceServer());
         peerConnection = peerConnectionFactory.createPeerConnection(iceServers, new PeerConnectionAdapter("localconnection") {
@@ -379,14 +383,14 @@ public class FaceActivity extends Activity implements SignalingClient.Callback{
                 SignalingClient.get().sendIceCandidate(iceCandidate);
             }
 
-/*            @Override
+            @Override
             public void onAddStream(MediaStream mediaStream) {
                 super.onAddStream(mediaStream);
                 VideoTrack remoteVideoTrack = mediaStream.videoTracks.get(0);
                 runOnUiThread(() -> {
                     remoteVideoTrack.addSink(remoteView);
                 });
-            }*/
+            }
         });
 
         peerConnection.addStream(mediaStream);
@@ -466,5 +470,5 @@ public class FaceActivity extends Activity implements SignalingClient.Callback{
                 data.optInt("label"),
                 data.optString("candidate")
         ));
-    }
+    }*/
 }

@@ -76,7 +76,7 @@ public class SignalingClient {
             IO.setDefaultHostnameVerifier((hostname, session) -> true);
             IO.setDefaultSSLContext(sslContext);
 
-            socket = IO.socket("https://192.168.1.108:8080");
+            socket = IO.socket("http://192.168.1.104:8080");
             socket.connect();
 
             socket.emit("create or join", room);
