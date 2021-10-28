@@ -22,9 +22,11 @@ import android.graphics.Color;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.mediapipe.formats.proto.LandmarkProto;
+import com.huawei.arengine.demos.R;
 import com.huawei.arengine.demos.common.ArDemoRuntimeException;
 import com.huawei.arengine.demos.common.DisplayRotationManager;
 import com.huawei.arengine.demos.common.LogUtil;
@@ -84,8 +86,8 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
 
     private boolean isOpenCameraOutside = true;
 
-    private static final String ServerIp = "192.168.66.113";
-    private static final int ServerPort = 8001;
+    private static String ServerIp = "192.168.0.1";
+    private static final int ServerPort = 8002;
 
     /**
      * Initialize the texture ID.
@@ -171,6 +173,10 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
             return;
         }
         mTextView = textView;
+    }
+
+    public void setServerIp(String ip){
+        ServerIp = ip;
     }
 
     @Override
@@ -288,8 +294,9 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
         }
         sb.append(System.lineSeparator());
 
-        float[] textureCoordinates = face.getFaceGeometry().getTextureCoordinates().array();
-        sb.append("textureCoordinates length:[ ").append(textureCoordinates.length).append(" ]");
+        //float[] textureCoordinates = face.getFaceGeometry().getTextureCoordinates().array();
+        //sb.append("textureCoordinates length:[ ").append(textureCoordinates.length).append(" ]").append(System.lineSeparator());
+        sb.append("UDP Server Ip: ").append(ServerIp);
         //sb.append("left eye blink:[").append(face.getFaceBlendShapes().getBlendShapeDataMapKeyString().get("Animoji_Eye_Blink_Left")).append(" ]");
     }
 
@@ -306,13 +313,11 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
         return fps;
     }
 
-    public void send_UDP(JSONObject data) throws IOException, JSONException {
-        JSONObject blendshapeData = new JSONObject();
-        blendshapeData.put("type", "blendshape");
-        blendshapeData.put("content", data);
-        DatagramPacket packet = new DatagramPacket(blendshapeData.toString().getBytes(), blendshapeData.toString().getBytes().length, InetAddress.getByName(ServerIp), ServerPort);
+    public void send_UDP(JSONObject data) throws IOException {
+        DatagramPacket packet = new DatagramPacket(data.toString().getBytes(), data.toString().getBytes().length, InetAddress.getByName(ServerIp), ServerPort);
         DatagramSocket socket = new DatagramSocket();
         socket.send(packet);
-        Log.d("send--face", String.valueOf(blendshapeData));
+        Log.d("send--face", String.valueOf(data));
+        //Log.d("udp--face", ServerIp);
     }
 }

@@ -13,5 +13,4 @@
     <string name="arengine_install" priority="translator">INSTALL</string>
     <string name="arengine_install_app" priority="translator">Install the latest version of HUAWEI AR Engine to continue.</string>
     <string name="worldSceneMobileTips">Please move the mobile phone slowly to find the plane</string>
-    <string name="udpIP">192.168.1.116</string>
 </resources>

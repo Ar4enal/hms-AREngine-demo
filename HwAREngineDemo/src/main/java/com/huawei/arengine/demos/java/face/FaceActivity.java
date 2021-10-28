@@ -17,6 +17,7 @@
 package com.huawei.arengine.demos.java.face;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
@@ -26,8 +27,12 @@ import android.util.DisplayMetrics;
 import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.huawei.arengine.demos.R;
 import com.huawei.arengine.demos.common.DisplayRotationManager;
@@ -74,7 +79,7 @@ import java.util.List;
  * @since 2020-03-18
  */
 //public class FaceActivity extends Activity implements SignalingClient.Callback{
-public class FaceActivity extends Activity{
+public class FaceActivity extends Activity implements View.OnClickListener{
     private static final String TAG = FaceActivity.class.getSimpleName();
 
     private ARSession mArSession;
@@ -105,13 +110,13 @@ public class FaceActivity extends Activity{
 
     private boolean isRemindInstall = false;
 
+    private Button enter_ip;
+
+    //private String serveraddress;
     /**
      * The initial texture ID is -1.
      */
     private int textureId = -1;
-    
-    private static final String ServerIp = "192.168.0.104";
-    private static final int ServerPort = 8001;
 /*    PeerConnectionFactory peerConnectionFactory;
     PeerConnection peerConnection;
     MediaStream mediaStream;*/
@@ -120,6 +125,7 @@ public class FaceActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.face_activity_main);
+        bindView();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mTextView = findViewById(R.id.faceTextView);
         glSurfaceView = findViewById(R.id.faceSurfaceview);
@@ -135,11 +141,14 @@ public class FaceActivity extends Activity{
         glSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 
         mFaceRenderManager = new FaceRenderManager(this, this);
+        //mFaceRenderManager.setServerIp(serveraddress);
         mFaceRenderManager.setDisplayRotationManage(mDisplayRotationManager);
         mFaceRenderManager.setTextView(mTextView);
+
         glSurfaceView.setRenderer(mFaceRenderManager);
         glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
+        //AudioRecordUtil.getInstance().setServerIp(serveraddress);
         AudioRecordUtil.getInstance().start();
 
 
@@ -372,6 +381,43 @@ public class FaceActivity extends Activity{
                     | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
     }
+
+    private void bindView(){
+        enter_ip = (Button) findViewById(R.id.enter_ip);
+        enter_ip.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.enter_ip){
+            AlertDialog.Builder dialog = new AlertDialog.Builder(FaceActivity.this);
+            dialog.setTitle("Please enter UDP server IP address");
+            final View view = View.inflate(FaceActivity.this, R.layout.udpserver_ip, null);
+            EditText et = view.findViewById(R.id.server_ip);
+            dialog.setView(view);
+            dialog.setPositiveButton("confirm", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    String ip = et.getText().toString();
+                    Toast.makeText(FaceActivity.this, "UDP server ip:" + ip, Toast.LENGTH_SHORT).show();
+                    //serveraddress = ip;
+                    AudioRecordUtil.getInstance().setServerIp(ip);
+                    mFaceRenderManager.setServerIp(ip);
+                    dialogInterface.cancel();
+                }
+            });
+
+            dialog.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.cancel();
+                }
+            });
+            dialog.show();
+        }
+    }
+
+
 
 /*    private void call() {
         List<PeerConnection.IceServer> iceServers = new ArrayList<>();

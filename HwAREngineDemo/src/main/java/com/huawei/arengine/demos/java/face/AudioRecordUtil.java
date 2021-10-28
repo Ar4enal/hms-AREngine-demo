@@ -1,11 +1,18 @@
 package com.huawei.arengine.demos.java.face;
 
+import android.content.DialogInterface;
 import android.media.AudioAttributes;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.AudioTrack;
 import android.media.MediaRecorder;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,8 +30,9 @@ public class AudioRecordUtil {
     //音频数据格式:PCM 16位每个样本。保证设备支持。PCM 8位每个样本。不一定能得到设备支持。
     private final int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
 
-    private static final String ServerIp = "192.168.66.113";
+    private static String ServerIp = "192.168.0.1";
     private static final int ServerPort = 8001;
+
     private AudioTrack mTrack;
     //录制状态
     private boolean recorderState = true;
@@ -70,7 +78,6 @@ public class AudioRecordUtil {
             audioRecord.startRecording();
 
             //mTrack.play();
-
             new RecordThread().start();
         }
     }
@@ -88,16 +95,20 @@ public class AudioRecordUtil {
         //mTrack.release();
     }
 
-    public void send_UDP(byte[] data) throws IOException, JSONException {
-        JSONObject audioData = new JSONObject();
-        audioData.put("type", "audio");
-        audioData.put("content", data);
-        DatagramPacket packet = new DatagramPacket(audioData.toString().getBytes(), audioData.toString().getBytes().length, InetAddress.getByName(ServerIp), ServerPort);
-        DatagramSocket socket = new DatagramSocket();
-        socket.send(packet);
-        Log.d("send--audio", String.valueOf(audioData));
+    public void setServerIp(String ip){
+        ServerIp = ip;
     }
 
+    public void send_UDP(byte[] data) throws IOException, JSONException {
+        //JSONObject audioData = new JSONObject();
+        //audioData.put("type", "audio");
+        //audioData.put("content", data);
+        DatagramPacket packet = new DatagramPacket(data, data.length, InetAddress.getByName(ServerIp), ServerPort);
+        DatagramSocket socket = new DatagramSocket();
+        socket.send(packet);
+        Log.d("send--audio", String.valueOf(data));
+        //Log.d("udp--audio", ServerIp);
+    }
 
     private class RecordThread extends Thread {
 

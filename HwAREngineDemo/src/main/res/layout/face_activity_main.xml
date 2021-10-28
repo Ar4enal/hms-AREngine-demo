@@ -23,4 +23,13 @@
         tools:layout_editor_absoluteX="315dp"
         tools:layout_editor_absoluteY="4dp" />
 
+    <Button
+        android:id="@+id/enter_ip"
+        android:layout_width="121dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:text="UDP SERVER IP"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
