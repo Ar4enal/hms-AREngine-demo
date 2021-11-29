@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.huawei.arengine.demos.ChooseActivity"
+            android:name="com.huawei.arengine.demos.java.face.FaceActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -42,12 +42,12 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity
+<!--        <activity
             android:name="com.huawei.arengine.demos.java.face.FaceActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.NoActionBar" />-->
         <activity
             android:name="com.huawei.arengine.demos.java.body3d.BodyActivity"
             android:configChanges="orientation|screenSize"
@@ -89,7 +89,30 @@
             android:screenOrientation="portrait"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <meta-data
+            android:name="cameraFacingFront"
+            android:value="true" />
+        <meta-data
+            android:name="binaryGraphName"
+            android:value="holistic_tracking_aar.binarypb" />
+        <meta-data
+            android:name="inputVideoStreamName"
+            android:value="input_video" />
+        <meta-data
+            android:name="outputVideoStreamName"
+            android:value="output_video" />
+        <meta-data
+            android:name="flipFramesVertically"
+            android:value="true" />
+        <meta-data
+            android:name="converterNumBuffers"
+            android:value="3" />
+        <meta-data
+            android:name="poselandmarks"
+            android:value="pose_landmarks" />
     </application>
+
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

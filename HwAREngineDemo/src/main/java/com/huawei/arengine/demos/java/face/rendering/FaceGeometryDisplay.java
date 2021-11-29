@@ -145,7 +145,7 @@ public class FaceGeometryDisplay {
      *
      * @param context Context.
      */
-    void init(Context context) {
+    public void init(Context context) {
         ShaderUtil.checkGlError(TAG, "Init start.");
         int[] texNames = new int[1];
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);

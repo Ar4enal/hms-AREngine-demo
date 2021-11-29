@@ -7,21 +7,45 @@
     android:layout_height="match_parent"
     tools:context="com.huawei.arengine.demos.java.face.FaceActivity">
 
-    <android.opengl.GLSurfaceView
+    <com.huawei.arengine.demos.common.egl.EglSurfaceView
         android:id="@+id/faceSurfaceview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="top"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"/>
 
-    <TextView
+    <FrameLayout
+        android:id="@+id/preview_display_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
+    </FrameLayout>
+
+<!--    <android.opengl.GLSurfaceView
+        android:id="@+id/faceSurfaceview"
+        android:layout_width="407dp"
+        android:layout_height="413dp"
+        android:layout_gravity="top"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="4dp" />
+
+    <FrameLayout
+        android:id="@+id/preview_display_layout"
+        android:layout_width="406dp"
+        android:layout_height="319dp"
+        android:layout_weight="1"
+        app:layout_constraintTop_toBottomOf="@+id/faceSurfaceview"
+        tools:layout_editor_absoluteX="0dp"></FrameLayout>-->
+
+<!--    <TextView
         android:id="@+id/faceTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
         android:textColor="@color/red"
         tools:layout_editor_absoluteX="315dp"
-        tools:layout_editor_absoluteY="4dp" />
+        tools:layout_editor_absoluteY="4dp"
+        tools:ignore="MissingConstraints" />-->
 
     <Button
         android:id="@+id/enter_ip"
@@ -31,5 +55,7 @@
         android:text="UDP SERVER IP"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

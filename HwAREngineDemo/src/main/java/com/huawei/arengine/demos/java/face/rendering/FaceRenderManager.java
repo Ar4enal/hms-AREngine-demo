@@ -33,6 +33,7 @@ import com.huawei.arengine.demos.common.LogUtil;
 import com.huawei.arengine.demos.common.TextDisplay;
 import com.huawei.arengine.demos.common.TextureDisplay;
 import com.huawei.arengine.demos.java.face.AudioRecordUtil;
+import com.huawei.arengine.demos.java.face.MediapipeFlow;
 import com.huawei.hiar.ARCamera;
 import com.huawei.hiar.ARFace;
 import com.huawei.hiar.ARFaceBlendShapes;
@@ -51,9 +52,11 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.nio.FloatBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -101,6 +104,8 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
     private TextDisplay mTextDisplay = new TextDisplay();
 
     private DisplayRotationManager mDisplayRotationManager;
+
+    private MediapipeFlow mediapipeFlow;
 
     /**
      * The constructor initializes context and activity.
@@ -256,6 +261,7 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
             }
             LogUtil.debug(TAG, "Face number: " + faces.size());
             ARCamera camera = frame.getCamera();
+
             for (ARFace face : faces) {
                 if (face.getTrackingState() == TrackingState.TRACKING) {
                     mFaceGeometryDisplay.onDrawFrame(camera, face);
@@ -281,7 +287,7 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
 
     private void updateMessageData(StringBuilder sb, float fpsResult, ARFace face) {
         sb.append("FPS= ").append(fpsResult).append(System.lineSeparator());
-        ARPose pose = face.getPose();
+/*        ARPose pose = face.getPose();
         if (pose != null) {
             sb.append("face pose information:");
             sb.append("face pose tx:[").append(pose.tx()).append("]").append(System.lineSeparator());
@@ -294,10 +300,9 @@ public class FaceRenderManager implements GLSurfaceView.Renderer {
         }
         sb.append(System.lineSeparator());
 
-        //float[] textureCoordinates = face.getFaceGeometry().getTextureCoordinates().array();
-        //sb.append("textureCoordinates length:[ ").append(textureCoordinates.length).append(" ]").append(System.lineSeparator());
+        float[] textureCoordinates = face.getFaceGeometry().getTextureCoordinates().array();
+        sb.append("textureCoordinates length:[ ").append(textureCoordinates.length).append(" ]").append(System.lineSeparator());*/
         sb.append("UDP Server Ip: ").append(ServerIp);
-        //sb.append("left eye blink:[").append(face.getFaceBlendShapes().getBlendShapeDataMapKeyString().get("Animoji_Eye_Blink_Left")).append(" ]");
     }
 
     private float doFpsCalculate() {
